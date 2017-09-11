@@ -1,0 +1,31 @@
+cd ~/Escritorio/TFM/UCI
+
+export AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXX
+export AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXXXX
+
+$SPARK_HOME/ec2/spark-ec2 --key-pair=tfm --identity-file="./assets/tfm.pem" --region=eu-west-1 --instance-type=t2.medium --slaves=2 --user-data="./assets/startup.sh" --spark-version=2.0.2 launch tfm-cluster
+
+# Driver:
+ssh -i "./assets/tfm.pem" root@ec2-xxx-xxx-xxx-xxx.eu-west-1.compute.amazonaws.com
+
+# spark-env.sh.template Python lines
+PYSPARK_DRIVER_PYTHON=/usr/bin/python3.5
+PYSPARK_PYTHON=/usr/bin/ipython
+
+# Jupyter-notebook in ec2 https://medium.com/towards-data-science/setting-up-and-using-jupyter-notebooks-on-aws-61a9648db6c5
+
+# En el driver: 
+export SPARK_HOME="/root/spark/"
+export PYSPARK_PYTHON=python3
+export PYSPARK_DRIVER_PYTHON=jupyter
+export PYSPARK_DRIVER_PYTHON_OPTS='notebook --allow-root'
+
+# Seguir estos pasos http://h2o-release.s3.amazonaws.com/sparkling-water/rel-2.0/15/index.html:
+wget http://h2o-release.s3.amazonaws.com/sparkling-water/rel-2.0/15/sparkling-water-2.0.15.zip
+unzip sparkling-water-2.0.15.zip
+
+# Ejecutar con la siguiente línea:
+PYSPARK_DRIVER_PYTHON="ipython" PYSPARK_DRIVER_PYTHON_OPTS="notebook --allow-root" sparkling-water-2.0.15/bin/pysparkling --executor-memory 2.3g --driver-memory 3g
+
+#Después, en otro terminal, ejecutar esta línea para acceder a los notebooks con localhost:8000 desde el navegador
+ssh -i ./assets/tfm.pem -L 8000:localhost:8888 root@ec2-xx-xxx-xxx-xxx.eu-west-1.compute.amazonaws.com
