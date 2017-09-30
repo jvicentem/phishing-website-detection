@@ -7,3 +7,5 @@ I used this dataset https://archive.ics.uci.edu/ml/datasets/phishing+websites an
 
 Undersampling techniques were used such as One-Sided Selection and Condensed Nearest Neighbor and they massively improved the training time of SVM models and the accuracy/precision/F1 measures of SVM with RBF Kernel.
 
+Creators of the dataset used:
+Mohammad, Rami, Thabtah, Fadi Abdeljaber and McCluskey, T.L. (2015) Phishing Websites Dataset. [Dataset] (Unpublished)
